@@ -294,7 +294,6 @@
 </head>
 <body>
 
-    <!-- ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== -->
     <div class="control-panel" id="controlPanel">
         <div class="panel-title">Режим названий</div>
 
@@ -321,7 +320,6 @@
         </div>
     </div>
 
-    <!-- ===== КОНТЕЙНЕР С КНОПКАМИ ===== -->
     <div class="container" id="appContainer">
 
         <button class="copy-btn" data-copy="Высказываться в оскорбительной, для других участников форме. Это касается и оскорблений в чате зрителей, модераторского состава и негативных высказываний в сторону стримера и тех кто играет с ним на стриме.  Карается мутом. В случае повторного нарушения карается Баном.">
@@ -384,8 +382,8 @@
             <span class="label-full">8. (Имя) стример забанен на площадке. Обсуждение него запрещено. Карается мутом.</span>
         </button>
 
-        <button class="copy-btn" data-copy='????'>
-            <span class="label-short">????</span>
+        <button class="copy-btn" data-copy='9. Фразы на подобии: "Зайдите к (Имя)", "У (имя) сейчас на стриме", "Задонатьте/сделайте ставку у (имя)" и иные с похожим смыслом в чате запрещены. Вне коллаборации, с (Имя) стримером. Карается мутом.'>
+            <span class="label-short">9. Фразы на подобии: "Зайдите к (Имя)", "У (имя) сейчас на стриме", "Задонатьте/сделайте ставку у (имя)" и иные с похожим смыслом в чате запрещены. Вне коллаборации, с (Имя) стримером. Карается мутом.</span>
             <span class="label-medium">9. Фразы на подобии: "Зайдите к (Имя)", "У (имя) сейчас на стриме", "Задонатьте/сделайте ставку у (имя)"</span>
             <span class="label-full">9. Фразы на подобии: "Зайдите к (Имя)", "У (имя) сейчас на стриме", "Задонатьте/сделайте ставку у (имя)" и иные с похожим смыслом в чате запрещены. Вне коллаборации, с (Имя) стримером. Карается мутом.</span>
         </button>
@@ -478,7 +476,6 @@
             const container = document.getElementById('appContainer');
             const radioButtons = document.querySelectorAll('input[name="mode"]');
 
-            // ---- Режим отображения названий ----
             function applyMode(mode) {
                 container.classList.remove('mode-short', 'mode-medium', 'mode-full');
                 container.classList.add('mode-' + mode);
@@ -524,7 +521,6 @@
                 }
             }
 
-            // ---- Управление размером шрифта ----
             const sizeDisplay = document.getElementById('sizeDisplay');
             const sizeDec = document.getElementById('sizeDec');
             const sizeInc = document.getElementById('sizeInc');
@@ -534,7 +530,6 @@
             const MIN_SIZE = 10;
             const MAX_SIZE = 32;
 
-            // Загружаем сохранённый размер
             try {
                 const savedSize = localStorage.getItem('copyFontSize');
                 if (savedSize) {
@@ -569,10 +564,8 @@
                 }
             });
 
-            // Применяем сохранённый размер при загрузке
             applyFontSize(currentSize);
 
-            // ---- Копирование ----
             const buttons = document.querySelectorAll('.copy-btn');
             const toast = document.getElementById('toast');
             let toastTimer = null;
