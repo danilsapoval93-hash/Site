@@ -1,0 +1,385 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Копировальщик текста</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 40px 20px;
+            background: #ffffff;
+            margin: 60px 0 40px 0;
+        }
+
+        .copy-btn {
+            width: 100%;
+            max-width: 500px;
+            padding: 14px 24px;
+            font-size: 17px;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            background: #f0f4fa;
+            color: #1a202c;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+            .copy-btn:hover {
+                background: #e2e8f0;
+            }
+
+            .copy-btn:active {
+                background: #d0d8e4;
+            }
+
+            .copy-btn .label-short {
+                display: none;
+            }
+
+            .copy-btn .label-medium {
+                display: none;
+            }
+
+            .copy-btn .label-full {
+                display: none;
+            }
+
+        .mode-short .copy-btn .label-short {
+            display: inline;
+        }
+
+        .mode-medium .copy-btn .label-medium {
+            display: inline;
+        }
+
+        .mode-full .copy-btn .label-full {
+            display: inline;
+        }
+
+        .mode-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffffff;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 1000;
+            background: #ffffff;
+            min-width: 130px;
+        }
+
+            .mode-panel .mode-title {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #7a8a9e;
+                font-weight: 600;
+                margin-bottom: 4px;
+                text-align: center;
+            }
+
+            .mode-panel label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 14px;
+                color: #2d3748;
+                cursor: pointer;
+                padding: 4px 6px;
+                border-radius: 4px;
+                transition: background 0.15s;
+            }
+
+                .mode-panel label:hover {
+                    background: #f0f4fa;
+                }
+
+            .mode-panel input[type="radio"] {
+                accent-color: #2b6cb0;
+                width: 15px;
+                height: 15px;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #2d3748;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.35s ease;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+        @media (max-width: 600px) {
+            .mode-panel {
+                top: 12px;
+                right: 12px;
+                padding: 10px 12px;
+                min-width: 110px;
+            }
+
+                .mode-panel label {
+                    font-size: 12px;
+                }
+
+            .container {
+                padding: 24px 16px;
+                margin-top: 80px;
+            }
+
+            .copy-btn {
+                font-size: 15px;
+                padding: 12px 18px;
+                max-width: 100%;
+            }
+
+            .toast {
+                font-size: 15px;
+                padding: 10px 20px;
+                bottom: 24px;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .mode-panel {
+                top: 8px;
+                right: 8px;
+                padding: 8px 10px;
+                min-width: 90px;
+            }
+
+                .mode-panel label {
+                    font-size: 11px;
+                    gap: 5px;
+                }
+
+                .mode-panel input[type="radio"] {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                .mode-panel .mode-title {
+                    font-size: 10px;
+                }
+
+            .copy-btn {
+                font-size: 13px;
+                padding: 10px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mode-panel" id="modePanel">
+        <div class="mode-title">Режим названий</div>
+
+        <label>
+            <input type="radio" name="mode" value="short" checked />
+            Короткий
+        </label>
+        <label>
+            <input type="radio" name="mode" value="medium" />
+            Средний
+        </label>
+        <label>
+            <input type="radio" name="mode" value="full" />
+            Полный
+        </label>
+    </div>
+
+    <div class="container" id="appContainer">
+
+        <button class="copy-btn" data-copy="Привет, мир! Это мой первый текст для копирования.">
+            <span class="label-short">Привет, мир!</span>
+            <span class="label-medium">Привет, мир! (первый)</span>
+            <span class="label-full">Привет, мир! Это мой первый текст для копирования.</span>
+        </button>
+
+        <button class="copy-btn" data-copy="Второй важный текст, который нужно часто копировать.">
+            <span class="label-short">Второй текст</span>
+            <span class="label-medium">Второй важный текст</span>
+            <span class="label-full">Второй важный текст, который нужно часто копировать.</span>
+        </button>
+
+        <button class="copy-btn" data-copy="Третий: JavaScript — это язык программирования, который используется для создания интерактивных веб-страниц.">
+            <span class="label-short">JavaScript</span>
+            <span class="label-medium">JavaScript — язык программирования</span>
+            <span class="label-full">Третий: JavaScript — это язык программирования, который используется для создания интерактивных веб-страниц.</span>
+        </button>
+
+        <button class="copy-btn" data-copy="Четвертый: В Visual Studio 2026 можно легко разрабатывать веб-приложения.">
+            <span class="label-short">Visual Studio</span>
+            <span class="label-medium">Visual Studio 2026</span>
+            <span class="label-full">Четвертый: В Visual Studio 2026 можно легко разрабатывать веб-приложения.</span>
+        </button>
+
+        <button class="copy-btn" data-copy="Пятый: GitHub Pages позволяет хостить статические сайты бесплатно.">
+            <span class="label-short">GitHub Pages</span>
+            <span class="label-medium">GitHub Pages — бесплатный хостинг</span>
+            <span class="label-full">Пятый: GitHub Pages позволяет хостить статические сайты бесплатно.</span>
+        </button>
+    </div>
+
+    <div class="toast" id="toast">Успешно скопировано!</div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            const container = document.getElementById('appContainer');
+            const radioButtons = document.querySelectorAll('input[name="mode"]');
+
+            function applyMode(mode) {
+                container.classList.remove('mode-short', 'mode-medium', 'mode-full');
+                container.classList.add('mode-' + mode);
+                try {
+                    localStorage.setItem('copyMode', mode);
+                } catch (e) { /* ignore */ }
+            }
+
+            radioButtons.forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    if (this.checked) {
+                        applyMode(this.value);
+                    }
+                });
+            });
+
+            try {
+                const savedMode = localStorage.getItem('copyMode');
+                if (savedMode && ['short', 'medium', 'full'].includes(savedMode)) {
+                    const targetRadio = document.querySelector('input[name="mode"][value="' + savedMode + '"]');
+                    if (targetRadio) {
+                        targetRadio.checked = true;
+                        applyMode(savedMode);
+                    } else {
+                        const defaultRadio = document.querySelector('input[name="mode"][value="short"]');
+                        if (defaultRadio) {
+                            defaultRadio.checked = true;
+                            applyMode('short');
+                        }
+                    }
+                } else {
+                    const defaultRadio = document.querySelector('input[name="mode"][value="short"]');
+                    if (defaultRadio) {
+                        defaultRadio.checked = true;
+                        applyMode('short');
+                    }
+                }
+            } catch (e) {
+                const defaultRadio = document.querySelector('input[name="mode"][value="short"]');
+                if (defaultRadio) {
+                    defaultRadio.checked = true;
+                    applyMode('short');
+                }
+            }
+
+            const buttons = document.querySelectorAll('.copy-btn');
+            const toast = document.getElementById('toast');
+            let toastTimer = null;
+
+            function showToast() {
+                if (toastTimer) {
+                    clearTimeout(toastTimer);
+                    toastTimer = null;
+                }
+                toast.classList.remove('show');
+                void toast.offsetWidth;
+                toast.classList.add('show');
+                toastTimer = setTimeout(function () {
+                    toast.classList.remove('show');
+                    toastTimer = null;
+                }, 2000);
+            }
+
+            function fallbackCopy(text) {
+                try {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    textarea.style.position = 'fixed';
+                    textarea.style.opacity = '0';
+                    textarea.style.left = '-9999px';
+                    textarea.style.top = '-9999px';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showToast();
+                } catch (err) {
+                    console.error('Fallback copy failed:', err);
+                }
+            }
+
+            buttons.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const textToCopy = this.getAttribute('data-copy');
+                    if (!textToCopy) {
+                        return;
+                    }
+
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(textToCopy)
+                            .then(function () {
+                                showToast();
+                            })
+                            .catch(function (err) {
+                                console.error('Ошибка копирования:', err);
+                                fallbackCopy(textToCopy);
+                            });
+                    } else {
+                        fallbackCopy(textToCopy);
+                    }
+                });
+            });
+        })();
+    </script>
+
+</body>
+</html>
