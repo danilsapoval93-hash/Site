@@ -85,7 +85,8 @@
             display: inline;
         }
 
-        .mode-panel {
+        /* ===== ПАНЕЛЬ УПРАВЛЕНИЯ (режимы + размер) ===== */
+        .control-panel {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -93,44 +94,102 @@
             padding: 12px 16px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             z-index: 1000;
-            background: #ffffff;
             min-width: 130px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
-            .mode-panel .mode-title {
+            .control-panel .panel-title {
                 font-size: 11px;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
                 color: #7a8a9e;
                 font-weight: 600;
-                margin-bottom: 4px;
                 text-align: center;
+                margin-bottom: 2px;
             }
 
-            .mode-panel label {
+            .control-panel .mode-group {
                 display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 14px;
-                color: #2d3748;
-                cursor: pointer;
-                padding: 4px 6px;
-                border-radius: 4px;
-                transition: background 0.15s;
+                flex-direction: column;
+                gap: 4px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #eef2f6;
             }
 
-                .mode-panel label:hover {
-                    background: #f0f4fa;
+                .control-panel .mode-group label {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 14px;
+                    color: #2d3748;
+                    cursor: pointer;
+                    padding: 3px 6px;
+                    border-radius: 4px;
+                    transition: background 0.15s;
                 }
 
-            .mode-panel input[type="radio"] {
-                accent-color: #2b6cb0;
-                width: 15px;
-                height: 15px;
+                    .control-panel .mode-group label:hover {
+                        background: #f0f4fa;
+                    }
+
+                .control-panel .mode-group input[type="radio"] {
+                    accent-color: #2b6cb0;
+                    width: 15px;
+                    height: 15px;
+                    cursor: pointer;
+                    flex-shrink: 0;
+                }
+
+            /* Блок управления размером */
+            .control-panel .size-group {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding-top: 4px;
+            }
+
+                .control-panel .size-group .size-label {
+                    font-size: 12px;
+                    color: #4a5568;
+                    font-weight: 500;
+                }
+
+            .control-panel .size-btn {
+                width: 32px;
+                height: 32px;
+                border: 1px solid #d1d9e6;
+                border-radius: 6px;
+                background: #f7fafc;
+                color: #2d3748;
+                font-size: 18px;
+                font-weight: 600;
                 cursor: pointer;
-                flex-shrink: 0;
+                transition: background 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1;
+            }
+
+                .control-panel .size-btn:hover {
+                    background: #edf2f7;
+                }
+
+                .control-panel .size-btn:active {
+                    background: #e2e8f0;
+                }
+
+            .control-panel .size-display {
+                font-size: 14px;
+                font-weight: 600;
+                color: #2d3748;
+                min-width: 32px;
+                text-align: center;
             }
 
         .toast {
@@ -156,15 +215,26 @@
             }
 
         @media (max-width: 600px) {
-            .mode-panel {
+            .control-panel {
                 top: 12px;
                 right: 12px;
                 padding: 10px 12px;
                 min-width: 110px;
             }
 
-                .mode-panel label {
+                .control-panel .mode-group label {
                     font-size: 12px;
+                }
+
+                .control-panel .size-btn {
+                    width: 28px;
+                    height: 28px;
+                    font-size: 16px;
+                }
+
+                .control-panel .size-display {
+                    font-size: 12px;
+                    min-width: 28px;
                 }
 
             .container {
@@ -187,25 +257,32 @@
         }
 
         @media (max-width: 420px) {
-            .mode-panel {
+            .control-panel {
                 top: 8px;
                 right: 8px;
                 padding: 8px 10px;
                 min-width: 90px;
             }
 
-                .mode-panel label {
+                .control-panel .mode-group label {
                     font-size: 11px;
                     gap: 5px;
                 }
 
-                .mode-panel input[type="radio"] {
+                .control-panel .mode-group input[type="radio"] {
                     width: 14px;
                     height: 14px;
                 }
 
-                .mode-panel .mode-title {
-                    font-size: 10px;
+                .control-panel .size-btn {
+                    width: 24px;
+                    height: 24px;
+                    font-size: 14px;
+                }
+
+                .control-panel .size-display {
+                    font-size: 11px;
+                    min-width: 24px;
                 }
 
             .copy-btn {
@@ -217,29 +294,40 @@
 </head>
 <body>
 
-    <div class="mode-panel" id="modePanel">
-        <div class="mode-title">Режим названий</div>
+    <!-- ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== -->
+    <div class="control-panel" id="controlPanel">
+        <div class="panel-title">Режим названий</div>
 
-        <label>
-            <input type="radio" name="mode" value="short" checked />
-            Короткий
-        </label>
-        <label>
-            <input type="radio" name="mode" value="medium" />
-            Средний
-        </label>
-        <label>
-            <input type="radio" name="mode" value="full" />
-            Полный
-        </label>
+        <div class="mode-group">
+            <label>
+                <input type="radio" name="mode" value="short" checked />
+                Короткий
+            </label>
+            <label>
+                <input type="radio" name="mode" value="medium" />
+                Средний
+            </label>
+            <label>
+                <input type="radio" name="mode" value="full" />
+                Полный
+            </label>
+        </div>
+
+        <div class="size-group">
+            <span class="size-label">Размер</span>
+            <button class="size-btn" id="sizeDec" title="Уменьшить размер">−</button>
+            <span class="size-display" id="sizeDisplay">17</span>
+            <button class="size-btn" id="sizeInc" title="Увеличить размер">+</button>
+        </div>
     </div>
 
+    <!-- ===== КОНТЕЙНЕР С КНОПКАМИ ===== -->
     <div class="container" id="appContainer">
 
         <button class="copy-btn" data-copy="Высказываться в оскорбительной, для других участников форме. Это касается и оскорблений в чате зрителей, модераторского состава и негативных высказываний в сторону стримера и тех кто играет с ним на стриме.  Карается мутом. В случае повторного нарушения карается Баном.">
             <span class="label-short">1. Оскорбление</span>
-            <span class="label-medium">1. Высказываться в оскорбительной, для других участников форме. </span>
-            <span class="label-full"> 1. Высказываться в оскорбительной, для других участников форме. Это касается и оскорблений в чате зрителей, модераторского состава и негативных высказываний в сторону стримера и тех кто играет с ним на стриме.  Карается мутом. В случае повторного нарушения карается Баном.</span>
+            <span class="label-medium">1. Высказываться в оскорбительной, для других участников форме.</span>
+            <span class="label-full">1. Высказываться в оскорбительной, для других участников форме. Это касается и оскорблений в чате зрителей, модераторского состава и негативных высказываний в сторону стримера и тех кто играет с ним на стриме. Карается мутом. В случае повторного нарушения карается Баном.</span>
         </button>
 
         <button class="copy-btn" data-copy="Запрещён постинг любых ссылок. В том числе на клипы с текущего стрима. Карается мутом. За рекламу карается Баном.">
@@ -260,15 +348,15 @@
             <span class="label-full">4.1 Требуется сменить Аватар. Использована недопустимая символика.</span>
         </button>
 
-        <button class="copy-btn" data-copy="Требуется сменить Ник. Использованы запрещенные термины. ">
+        <button class="copy-btn" data-copy="Требуется сменить Ник. Использованы запрещенные термины.">
             <span class="label-short">4.2 Ник.</span>
             <span class="label-medium">4.2 Требуется сменить Ник.</span>
             <span class="label-full">4.2 Требуется сменить Ник. Использованы запрещенные термины.</span>
         </button>
 
         <button class="copy-btn" data-copy="Требуется сменить Ник и Аватар. Использованы запрещённые термины и символика">
-            <span class="label-short">4.3 Ник и Аватар. </span>
-            <span class="label-medium">4.3 Требуется сменить Ник и Аватар. </span>
+            <span class="label-short">4.3 Ник и Аватар.</span>
+            <span class="label-medium">4.3 Требуется сменить Ник и Аватар.</span>
             <span class="label-full">4.3 Требуется сменить Ник и Аватар. Использованы запрещённые термины и символика</span>
         </button>
 
@@ -290,13 +378,13 @@
             <span class="label-full">7. Не надо люто спамить. Не надо провоцировать на спам плюсами , иными символами или словами. Капсить и просить подарки тоже не стоит. Карается мутом. В крайнем случае баном.</span>
         </button>
 
-        <button class="copy-btn" data-copy="(Имя) стример забанен на площадке. Обсуждение него запрещено. Карается мутом. ">
+        <button class="copy-btn" data-copy="(Имя) стример забанен на площадке. Обсуждение него запрещено. Карается мутом.">
             <span class="label-short">8. Забанненый стример</span>
             <span class="label-medium">8. (Имя) стример забанен на площадке.</span>
-            <span class="label-full">8. (Имя) стример забанен на площадке. Обсуждение него запрещено. Карается мутом. </span>
+            <span class="label-full">8. (Имя) стример забанен на площадке. Обсуждение него запрещено. Карается мутом.</span>
         </button>
 
-        <button class="copy-btn" data-copy="????">
+        <button class="copy-btn" data-copy='????'>
             <span class="label-short">????</span>
             <span class="label-medium">9. Фразы на подобии: "Зайдите к (Имя)", "У (имя) сейчас на стриме", "Задонатьте/сделайте ставку у (имя)"</span>
             <span class="label-full">9. Фразы на подобии: "Зайдите к (Имя)", "У (имя) сейчас на стриме", "Задонатьте/сделайте ставку у (имя)" и иные с похожим смыслом в чате запрещены. Вне коллаборации, с (Имя) стримером. Карается мутом.</span>
@@ -315,7 +403,7 @@
         </button>
 
         <button class="copy-btn" data-copy="Не упоминайте имена других стримеров в чате, если стример про них не говорит. Карается мутом. При игнорировании предупреждения баном">
-            <span class="label-short">9.4  Другие стримеры</span>
+            <span class="label-short">9.4 Другие стримеры</span>
             <span class="label-medium">9.4 Не упоминайте имена других стримеров в чате</span>
             <span class="label-full">9.4 Не упоминайте имена других стримеров в чате, если стример про них не говорит. Карается мутом. При игнорировании предупреждения баном</span>
         </button>
@@ -351,8 +439,8 @@
         </button>
 
         <button class="copy-btn" data-copy="Стример не добавляет в друзья и не расписывается в стиме. Спамить не нужно. Карается мутом.">
-            <span class="label-short">13. Не добавляет в друзья и не расписывается в стиме. </span>
-            <span class="label-medium">13. Стример не добавляет в друзья и не расписывается в стиме. </span>
+            <span class="label-short">13. Не добавляет в друзья и не расписывается в стиме.</span>
+            <span class="label-medium">13. Стример не добавляет в друзья и не расписывается в стиме.</span>
             <span class="label-full">13. Стример не добавляет в друзья и не расписывается в стиме. Спамить не нужно. Карается мутом.</span>
         </button>
 
@@ -362,7 +450,7 @@
             <span class="label-full">14. Стример не добавляет в друзья в дискорде, не добавляет в друзья в ТГ, не добавляет в друзья в ВК. Не тратьте ни своё время, ни стримера. Карается мутом. В крайнем случае баном.</span>
         </button>
 
-        <button class="copy-btn" data-copy="В чате общаются на языке указанном в ТЕГАХ. За чрезмерные нарушение карается мутом. ">
+        <button class="copy-btn" data-copy="В чате общаются на языке указанном в ТЕГАХ. За чрезмерные нарушение карается мутом.">
             <span class="label-short">15. Язык.</span>
             <span class="label-medium">15. В чате общаются на языке указанном в ТЕГАХ.</span>
             <span class="label-full">15. В чате общаются на языке указанном в ТЕГАХ. За чрезмерные нарушение карается мутом.</span>
@@ -390,6 +478,7 @@
             const container = document.getElementById('appContainer');
             const radioButtons = document.querySelectorAll('input[name="mode"]');
 
+            // ---- Режим отображения названий ----
             function applyMode(mode) {
                 container.classList.remove('mode-short', 'mode-medium', 'mode-full');
                 container.classList.add('mode-' + mode);
@@ -435,6 +524,55 @@
                 }
             }
 
+            // ---- Управление размером шрифта ----
+            const sizeDisplay = document.getElementById('sizeDisplay');
+            const sizeDec = document.getElementById('sizeDec');
+            const sizeInc = document.getElementById('sizeInc');
+            const allButtons = document.querySelectorAll('.copy-btn');
+
+            let currentSize = 17;
+            const MIN_SIZE = 10;
+            const MAX_SIZE = 32;
+
+            // Загружаем сохранённый размер
+            try {
+                const savedSize = localStorage.getItem('copyFontSize');
+                if (savedSize) {
+                    const parsed = parseInt(savedSize, 10);
+                    if (!isNaN(parsed) && parsed >= MIN_SIZE && parsed <= MAX_SIZE) {
+                        currentSize = parsed;
+                    }
+                }
+            } catch (e) { /* ignore */ }
+
+            function applyFontSize(size) {
+                allButtons.forEach(function (btn) {
+                    btn.style.fontSize = size + 'px';
+                });
+                sizeDisplay.textContent = size;
+                try {
+                    localStorage.setItem('copyFontSize', String(size));
+                } catch (e) { /* ignore */ }
+            }
+
+            sizeDec.addEventListener('click', function () {
+                if (currentSize > MIN_SIZE) {
+                    currentSize--;
+                    applyFontSize(currentSize);
+                }
+            });
+
+            sizeInc.addEventListener('click', function () {
+                if (currentSize < MAX_SIZE) {
+                    currentSize++;
+                    applyFontSize(currentSize);
+                }
+            });
+
+            // Применяем сохранённый размер при загрузке
+            applyFontSize(currentSize);
+
+            // ---- Копирование ----
             const buttons = document.querySelectorAll('.copy-btn');
             const toast = document.getElementById('toast');
             let toastTimer = null;
